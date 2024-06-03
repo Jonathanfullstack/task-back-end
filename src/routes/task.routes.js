@@ -24,21 +24,7 @@ router.patch("/:id", async (req, res) => {
 
 //  usamos essa rota para  deletar alguns tipos de rotas na nossa aplicacao
 router.delete("/:id", async (req, res) => {
-    try {
-        const taskId = req.params.id;
-
-        const taskToDeleted = await TaskModel.findById(taskId);
-
-        if (!taskToDeleted) {
-            return res.status(404).send("Essa tarefa nao foi encontrada !");
-        }
-
-        const deletedTask = await TaskModel.findByIdAndDelete(taskId);
-
-        res.status(200).send(deletedTask);
-    } catch {
-        res.status(500).send(error.message);
-    }
+    return new TaskController(req, res).getDeleted();
 });
 
 //esse modulo fara a exportacao do nosso arquivo Router
