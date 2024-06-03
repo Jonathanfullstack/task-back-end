@@ -19,37 +19,7 @@ router.post("/", async (req, res) => {
 
 //  usamos essa rota para atualizar recursos especifico na nossa aplicacao
 router.patch("/:id", async (req, res) => {
-    try {
-        const taskId = req.params.id;
-        const taskData = req.body;
-
-        // Verifica se a tarefa existe
-        const taskToUpdate = await TaskModel.findById(taskId);
-        if (!taskToUpdate) {
-            return res.status(404).send("Tarefa não encontrada");
-        }
-
-        const allowedUpdates = ["isCompleted"];
-        const requestedUpdates = Object.keys(req.body);
-
-        // Verifica se os campos são permitidos
-        for (const update of requestedUpdates) {
-            if (allowedUpdates.includes(update)) {
-                taskToUpdate[update] = req.body[update];
-            } else {
-                return res
-                    .status(400)
-                    .send("Um ou mais campos inseridos não são editáveis!");
-            }
-        }
-
-        // Salva as alterações
-        await taskToUpdate.save();
-
-        return res.status(200).send(taskToUpdate);
-    } catch (error) {
-        return res.status(500).send(error.message);
-    }
+    return new TaskController(req, res).gatAtualizar();
 });
 
 //  usamos essa rota para  deletar alguns tipos de rotas na nossa aplicacao
