@@ -1,16 +1,14 @@
 const express = require("express");
+const TaskController = require("../controller/task.controller");
 const TaskModel = require("../models/task.models");
 const router = express.Router();
 
+//  usamos essa rota para ler um recurso do nosso bamco de dados
 router.get("/", async (req, res) => {
-    try {
-        const tasks = await TaskModel.find({});
-        res.status(200).send(tasks);
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
+    return new TaskController(req, res).getTask();
 });
 
+//  usamos essa rota para ler um recurso no nosso banco de dados
 router.get("/:id", async (req, res) => {
     try {
         const taskId = req.params.id;
@@ -25,7 +23,7 @@ router.get("/:id", async (req, res) => {
         res.status(500).send(error.message);
     }
 });
-
+//  usamos essa rota para criar um recurso para nosso banco de dados
 router.post("/", async (req, res) => {
     try {
         const newTask = new TaskModel(req.body);
@@ -35,6 +33,8 @@ router.post("/", async (req, res) => {
         res.status(500).send(error.message);
     }
 });
+
+//  usamos essa rota para atualizar recursos especifico na nossa aplicacao
 router.patch("/:id", async (req, res) => {
     try {
         const taskId = req.params.id;
@@ -69,6 +69,7 @@ router.patch("/:id", async (req, res) => {
     }
 });
 
+//  usamos essa rota para  deletar alguns tipos de rotas na nossa aplicacao
 router.delete("/:id", async (req, res) => {
     try {
         const taskId = req.params.id;
@@ -87,4 +88,5 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
+//esse modulo fara a exportacao do nosso arquivo Router
 module.exports = router;
