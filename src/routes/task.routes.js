@@ -10,18 +10,7 @@ router.get("/", async (req, res) => {
 
 //  usamos essa rota para ler um recurso no nosso banco de dados
 router.get("/:id", async (req, res) => {
-    try {
-        const taskId = req.params.id;
-
-        const task = await TaskModel.findById(taskId);
-
-        if (!task) {
-            return res.status(404).send("essa tarefa nao foi encontrada!");
-        }
-        return res.status(200).send(task);
-    } catch {
-        res.status(500).send(error.message);
-    }
+    return new TaskController(req, res).getTaskById();
 });
 //  usamos essa rota para criar um recurso para nosso banco de dados
 router.post("/", async (req, res) => {
