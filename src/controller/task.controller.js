@@ -1,5 +1,6 @@
+const mongoose = require("mongoose");
 const TaskModel = require("../models/task.models");
-
+const { notfoundError } = require("../errors/mongo.db.error");
 class TaskController {
     constructor(req, res) {
         this.req = req;
@@ -19,16 +20,19 @@ class TaskController {
         try {
             const taskId = this.req.params.id;
 
+            // Verificar se o taskId é um ObjectId válido
+            if (!mongoose.Types.ObjectId.isValid(taskId)) {
+                return notfoundError(this.res);
+            }
+
             const task = await TaskModel.findById(taskId);
 
             if (!task) {
-                return this.res
-                    .status(404)
-                    .send("essa tarefa nao foi encontrada!");
+                return notfoundError(this.res);
             }
             return this.res.status(200).send(task);
-        } catch {
-            res.status(500).send(error.message);
+        } catch (error) {
+            this.res.status(500).send(error.message);
         }
     }
 
@@ -49,8 +53,8 @@ class TaskController {
 
             // Verifica se a tarefa existe
             const taskToUpdate = await TaskModel.findById(taskId);
-            if (!taskToUpdate) {
-                return this.res.status(404).send("Tarefa não encontrada");
+            if (!mongoose.Types.ObjectId.isValid(taskToUpdate)) {
+                return notfoundError(this.res);
             }
 
             const allowedUpdates = ["isCompleted"];
@@ -79,12 +83,10 @@ class TaskController {
         try {
             const taskId = this.req.params.id;
 
-            const taskToDeleted = await TaskModel.findById(taskId);
+            const taskToDeleted = await TaskModel.findById(taskToDeleted);
 
-            if (!taskToDeleted) {
-                return this.res
-                    .status(404)
-                    .send("Essa tarefa nao foi encontrada !");
+            if (!mongoose.Types.ObjectId.isValid(taskId)) {
+                return notfoundError(this.res);
             }
 
             const deletedTask = await TaskModel.findByIdAndDelete(taskId);
