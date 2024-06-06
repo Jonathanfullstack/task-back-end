@@ -82,16 +82,25 @@ class TaskController {
         try {
             const taskId = this.req.params.id;
 
-            const taskToDeleted = await TaskModel.findById(taskToDeleted);
-
+            // Check if taskId is a valid ObjectId
             if (!mongoose.Types.ObjectId.isValid(taskId)) {
                 return notfoundError(this.res);
             }
 
+            // Find the task by id to check if it exists
+            const taskToDelete = await TaskModel.findById(taskId);
+            if (!taskToDelete) {
+                return notfoundError(this.res);
+            }
+
+            // Delete the task
             const deletedTask = await TaskModel.findByIdAndDelete(taskId);
 
+            // Send the deleted task in the response
             this.res.status(200).send(deletedTask);
-        } catch {
+        } catch (error) {
+            // Handle any errors that occur in the try block
+            console.error("Error deleting task:", error);
             this.res.status(500).send(error.message);
         }
     }
