@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const connectToDatabase = async () => {
     try {
         await mongoose.connect(
-            `mongodb+srv://adminonde:5CjT1oWXxbXaWRAF@fullstackclubcluster.vxrvk1c.mongodb.net/?retryWrites=true&w=majority&appName=FullStackClubCluster`
+            `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSEORD}@fullstackclubcluster.vxrvk1c.mongodb.net/?retryWrites=true&w=majority&appName=FullStackClubCluster`
         );
         console.log("Connected to MongoDB777!!");
     } catch (error) {

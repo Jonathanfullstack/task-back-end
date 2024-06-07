@@ -3,6 +3,8 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const taskRouter = require("./src/routes/task.routes");
 
+const port = process.env.PORT || 8000;
+
 const connectToDatabase = require("./src/database/mongoose.database");
 
 const TaskModel = require("./src/models/task.models");
